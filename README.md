@@ -6,7 +6,7 @@
 
 ```shell
 $ go install github.com/roronya/saeota@latest # install
-$ saeota -f figure.png -l 左の1行目のセリフ -l2 左の2行目のセリフ -r 右の1行目のセリフ -r2 右の2行目のセリフ > out.png # usage
+$ saeota -f figure.png -c ©コピーライト -l 左の1行目のセリフ -l2 左の2行目のセリフ -r 右の1行目のセリフ -r2 右の2行目のセリフ > out.png # usage
 ```
 
 ![example](example/out.png)

@@ -18,8 +18,8 @@ import (
 
 // 画像サイズ
 const (
-	HEIGHT = 720
 	WIDTH  = 1280
+	HEIGHT = 720
 )
 
 // 解説対象の画像の表示位置
@@ -41,9 +41,17 @@ const (
 	LComment2PointY = LCommentPointY + FontSize + 5
 )
 
+//コピーライトのフォントや位置 何度か試して適当に決めた
+const (
+	CopyrightFontSize = 10
+	CopyrightPointX   = 240
+	CopyrightPoinyY   = 470
+)
+
 /* 変数は全てinitで初期化してmainを見通し良くする */
 var l, l2, r, r2 string // セリフ
 var f string            // 解説対象の画像のファイルパス
+var c string            // 解説対象のコピーライト
 var figure image.Image  // 解説対象の画像
 
 // テンプレート画像の読み込み用
@@ -73,6 +81,7 @@ func init() {
 	flag.StringVar(&r, "r", "", "右のセリフ")
 	flag.StringVar(&r2, "r2", "", "二行目の右のセリフ")
 	flag.StringVar(&f, "f", "", "解説対象の画像パス")
+	flag.StringVar(&c, "c", "", "解説対象のコピーライト")
 	flag.Parse()
 	if f == "" {
 		log.Fatal("解説対象の画像パスは必ず指定してください")
@@ -112,6 +121,9 @@ func init() {
 	}
 }
 
+/**
+まっさらな画像を生成し、その上にテンプレートの画像、解説対象の画像、コピーライト、セリフの順番で書き込んでPNGに吐く
+*/
 func main() {
 	// 新しく生成する画像を初期化
 	dst := image.NewRGBA(
@@ -142,6 +154,12 @@ func main() {
 		draw.Src,
 	)
 
+	// コピーライトを書き込む
+	if c != "" {
+		drawCopyright(c, ft, dst)
+	}
+
+	// セリフを書き込む
 	if r != "" {
 		drawComment(r, ft, RCommentPointX, RCommentPointY, dst)
 	}
@@ -165,6 +183,19 @@ func drawComment(text string, ft *truetype.Font, x int, y int, dst *image.RGBA) 
 	d := &font.Drawer{
 		Dst:  dst,
 		Src:  image.NewUniform(color.Black),
+		Face: face,
+		Dot:  dot,
+	}
+	d.DrawString(text)
+}
+
+func drawCopyright(text string, ft *truetype.Font, dst *image.RGBA) {
+	opt := truetype.Options{Size: CopyrightFontSize}
+	face := truetype.NewFace(ft, &opt)
+	dot := fixed.Point26_6{X: fixed.Int26_6(CopyrightPointX * 64), Y: fixed.Int26_6(CopyrightPoinyY * 64)}
+	d := &font.Drawer{
+		Dst:  dst,
+		Src:  image.NewUniform(color.White),
 		Face: face,
 		Dot:  dot,
 	}
