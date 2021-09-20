@@ -15,14 +15,24 @@ import (
 	"github.com/golang/freetype/truetype"
 )
 
+// 画像サイズ
 const (
 	WIDTH, HEIGHT = 1280, 720
+)
+
+// 解説対象の画像の表示位置
+const (
 	FIGURE_POINT_MIN_X = 240
 	FIGURE_POINT_MIN_Y = 10
 	FIGURE_POINT_MAX_X = 1040
 	FIGURE_POINT_MAX_Y = 466
+)
+
+// セリフを描画するフォントや位置
+const (
+	FONT = "assets/ipaexg.ttf"
 	FONT_SIZE = 26
-	// コメントの場所は何度か試して適当に決めた
+	// 何度か試して適当に決めた
 	R_COMMENT_POINT_X = 250
 	R_COMMENT_POINT_Y = 530
 	R_COMMENT2_POINT_Y = R_COMMENT_POINT_Y + FONT_SIZE + 5 // 5は行間のサイズ
@@ -31,9 +41,15 @@ const (
 	L_COMMENT2_POINT_Y = L_COMMENT_POINT_Y + FONT_SIZE + 5
 )
 
-var l,r,f string
+/* 変数は全てinitで初期化してmainを見通し良くする */
+var l,r string // セリフ
+var f string // 解説対象の画像のファイルパス
+var figure image.Image // 解説対象の画像
+var template image.Image // テンプレートの画像
+var ft *truetype.Font // セリフを描画するときに使うフォント
 
 func init() {
+	// コマンドライン引数
 	flag.StringVar(&l, "l", "", "左のセリフ")
 	flag.StringVar(&r, "r", "", "右のセリフ")
 	flag.StringVar(&f, "f", "", "解説対象の画像パス")
@@ -41,29 +57,53 @@ func init() {
 	if f == "" {
 		log.Fatal("解説対象の画像パスは必ず指定してください")
 	}
+
+	// 解説対象の画像の取得
+	file,err := os.Open(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	figure, err = png.Decode(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// セリフのありなしを見てどのテンプレートを使うか決めてオープンする
+	t := "assets/lr.png"
+	if l == "" {
+		t = "assets/r.png"
+	}
+	if r == "" {
+		t = "assets/l.png"
+	}
+	file, err = os.Open(t)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	template, err = png.Decode(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// フォントを開いて用意する
+	file, err = os.Open(FONT)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	ftBin, err := io.ReadAll(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	ft, err = truetype.Parse(ftBin)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main () {
-	file, err := os.Open("assets/lr.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	template, err := png.Decode(file)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	file,err = os.Open(f)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	figure, err := png.Decode(file)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// 新しく生成する画像を初期化
 	dst := image.NewRGBA(
 		image.Rectangle{
@@ -92,19 +132,6 @@ func main () {
 		image.Point{}, // 切り取らないから(0,0)を指定する
 		draw.Src,
 	)
-
-	ttf, err := os.Open("assets/ipaexg.ttf")
-	if err != nil {
-		log.Fatal(err)
-	}
-	ftBin, err := io.ReadAll(ttf)
-	if err != nil {
-		log.Fatal(err)
-	}
-	ft, err := truetype.Parse(ftBin)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	drawComment(r, ft, R_COMMENT_POINT_X, R_COMMENT_POINT_Y, dst)
 	drawComment(l, ft, L_COMMENT_POINT_X, L_COMMENT_POINT_Y, dst)
