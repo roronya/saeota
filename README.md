@@ -15,6 +15,15 @@ $ saeota -f figure.png -l 左の1行目のセリフ -l2 左の2行目のセリ�
 
 900px x 450px であることを想定しています。
 
+### iPadでスクリーンショットを撮ってsaeotaの入力する場合
+
+ImageMagickでリサイズしてクロップすると簡単です。
+
+```shell
+$ convert -resize 800x600 input.png resized.png
+$ convert -crop 800x450+0+75 resized.png croped.png
+```
+
 ## Output
 
 アウトプットはPNGで解像度は1280px x 720pxです。
