@@ -33,21 +33,21 @@ const (
 
 // セリフを描画するフォントや位置 何度か試して適当に決めた
 const (
-	MAX_COMMENT_LENGTH = 30
-	FontSize           = 26
-	RCommentPointX     = 250
-	RCommentPointY     = 530
-	RComment2PointY    = RCommentPointY + FontSize + 5 // 5は行間のサイズ
-	LCommentPointX     = 250
-	LCommentPointY     = 645
-	LComment2PointY    = LCommentPointY + FontSize + 5
+	MaxCommentLength = 30
+	FontSize         = 26
+	RCommentPointX   = 250
+	RCommentPointY   = 530
+	RComment2PointY  = RCommentPointY + FontSize + 5 // 5は行間のサイズ
+	LCommentPointX   = 250
+	LCommentPointY   = 645
+	LComment2PointY  = LCommentPointY + FontSize + 5
 )
 
 //コピーライトのフォントや位置 何度か試して適当に決めた
 const (
 	CopyrightFontSize = 10
 	CopyrightPointX   = 240
-	CopyrightPoinyY   = 470
+	CopyrightPointY   = 470
 )
 
 /* 変数は全てinitで初期化してmainを見通し良くする */
@@ -58,16 +58,16 @@ var figure image.Image  // 解説対象の画像
 
 // テンプレート画像の読み込み用
 //go:embed assets/lr.png
-var template_lr []byte
+var templateLr []byte
 
 //go:embed assets/l.png
-var template_l []byte
+var templateL []byte
 
 //go:embed assets/r.png
-var template_r []byte
+var templateR []byte
 
 //go:embed assets/nocomment.png
-var template_nocomment []byte
+var templateNocomment []byte
 
 var template image.Image // テンプレートの画像
 
@@ -91,8 +91,8 @@ func init() {
 	l2c := utf8.RuneCountInString(l2)
 	rc := utf8.RuneCountInString(r)
 	r2c := utf8.RuneCountInString(r2)
-	if lc > MAX_COMMENT_LENGTH || l2c > MAX_COMMENT_LENGTH || rc > MAX_COMMENT_LENGTH || r2c > MAX_COMMENT_LENGTH {
-		log.Fatalf("セリフは%d文字以内にしてください。l=%d文字 l2=%d文字 r=%d文字 r2%d文字でした。", MAX_COMMENT_LENGTH, lc, l2c, rc, r2c)
+	if lc > MaxCommentLength || l2c > MaxCommentLength || rc > MaxCommentLength || r2c > MaxCommentLength {
+		log.Fatalf("セリフは%d文字以内にしてください。l=%d文字 l2=%d文字 r=%d文字 r2%d文字でした。", MaxCommentLength, lc, l2c, rc, r2c)
 	}
 	if f == "" {
 		log.Fatal("解説対象の画像パスは必ず指定してください")
@@ -110,15 +110,15 @@ func init() {
 	}
 
 	// セリフのありなしを見てどのテンプレートを使うか決めてオープンする
-	t := template_nocomment
+	t := templateNocomment
 	if l != "" && r != "" {
-		t = template_lr
+		t = templateLr
 	}
 	if l == "" && r != "" {
-		t = template_r
+		t = templateR
 	}
 	if l != "" && r == "" {
-		t = template_l
+		t = templateL
 	}
 	template, err = png.Decode(bytes.NewReader(t))
 	if err != nil {
@@ -203,7 +203,7 @@ func drawComment(text string, ft *truetype.Font, x int, y int, dst *image.RGBA) 
 func drawCopyright(text string, ft *truetype.Font, dst *image.RGBA) {
 	opt := truetype.Options{Size: CopyrightFontSize}
 	face := truetype.NewFace(ft, &opt)
-	dot := fixed.Point26_6{X: fixed.Int26_6(CopyrightPointX * 64), Y: fixed.Int26_6(CopyrightPoinyY * 64)}
+	dot := fixed.Point26_6{X: fixed.Int26_6(CopyrightPointX * 64), Y: fixed.Int26_6(CopyrightPointY * 64)}
 	d := &font.Drawer{
 		Dst:  dst,
 		Src:  image.NewUniform(color.White),
