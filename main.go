@@ -18,41 +18,44 @@ import (
 
 // 画像サイズ
 const (
-	WIDTH, HEIGHT = 1280, 720
+	HEIGHT = 720
+	WIDTH  = 1280
 )
 
 // 解説対象の画像の表示位置
 const (
-	FIGURE_POINT_MIN_X = 240
-	FIGURE_POINT_MIN_Y = 10
-	FIGURE_POINT_MAX_X = 1040
-	FIGURE_POINT_MAX_Y = 466
+	FigurePointMinX = 240
+	FigurePointMinY = 10
+	FigurePointMaxX = 1040
+	FigurePointMaxY = 466
 )
 
-// セリフを描画するフォントや位置
+// セリフを描画するフォントや位置 何度か試して適当に決めた
 const (
-	FONT_SIZE = 26
-	// 何度か試して適当に決めた
-	R_COMMENT_POINT_X = 250
-	R_COMMENT_POINT_Y = 530
-	R_COMMENT2_POINT_Y = R_COMMENT_POINT_Y + FONT_SIZE + 5 // 5は行間のサイズ
-	L_COMMENT_POINT_X = 250
-	L_COMMENT_POINT_Y = 645
-	L_COMMENT2_POINT_Y = L_COMMENT_POINT_Y + FONT_SIZE + 5
+	FontSize        = 26
+	RCommentPointX  = 250
+	RCommentPointY  = 530
+	RComment2PointY = RCommentPointY + FontSize + 5 // 5は行間のサイズ
+	LCommentPointX  = 250
+	LCommentPointY  = 645
+	LComment2PointY = LCommentPointY + FontSize + 5
 )
 
 /* 変数は全てinitで初期化してmainを見通し良くする */
-var l,l2,r,r2 string // セリフ
-var f string // 解説対象の画像のファイルパス
-var figure image.Image // 解説対象の画像
+var l, l2, r, r2 string // セリフ
+var f string            // 解説対象の画像のファイルパス
+var figure image.Image  // 解説対象の画像
 
 // テンプレート画像の読み込み用
 //go:embed assets/lr.png
 var template_lr []byte
+
 //go:embed assets/l.png
 var template_l []byte
+
 //go:embed assets/r.png
 var template_r []byte
+
 //go:embed assets/nocomment.png
 var template_nocomment []byte
 
@@ -76,7 +79,7 @@ func init() {
 	}
 
 	// 解説対象の画像の取得
-	file,err := os.Open(f)
+	file, err := os.Open(f)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,7 +94,7 @@ func init() {
 	if l != "" && r != "" {
 		t = template_lr
 	}
-	if l == "" && r != ""{
+	if l == "" && r != "" {
 		t = template_r
 	}
 	if l != "" && r == "" {
@@ -109,13 +112,13 @@ func init() {
 	}
 }
 
-func main () {
+func main() {
 	// 新しく生成する画像を初期化
 	dst := image.NewRGBA(
 		image.Rectangle{
-		Min: image.Point{},
-		Max: image.Point{X: WIDTH, Y: HEIGHT},
-	})
+			Min: image.Point{},
+			Max: image.Point{X: WIDTH, Y: HEIGHT},
+		})
 	// templateの画像を上に乗せる
 	draw.Draw(
 		dst,
@@ -132,38 +135,38 @@ func main () {
 		// 解説対象の画像は800*450なので左からは(1280-800)/2=240pxの場所に置く。画面上部のマージンはなんとなく10pxくらい
 		// 右下は左隅から右に240+800=1040pxで、縦は16+450=466pxを指定する
 		image.Rectangle{
-			Min: image.Point{X: FIGURE_POINT_MIN_X, Y: FIGURE_POINT_MIN_Y},
-			Max: image.Point{X: FIGURE_POINT_MAX_X, Y: FIGURE_POINT_MAX_Y}},
+			Min: image.Point{X: FigurePointMinX, Y: FigurePointMinY},
+			Max: image.Point{X: FigurePointMaxX, Y: FigurePointMaxY}},
 		figure,
 		image.Point{}, // 切り取らないから(0,0)を指定する
 		draw.Src,
 	)
 
 	if r != "" {
-		drawComment(r, ft, R_COMMENT_POINT_X, R_COMMENT_POINT_Y, dst)
+		drawComment(r, ft, RCommentPointX, RCommentPointY, dst)
 	}
 	if r2 != "" {
-		drawComment(r2, ft, R_COMMENT_POINT_X, R_COMMENT2_POINT_Y, dst)
+		drawComment(r2, ft, RCommentPointX, RComment2PointY, dst)
 	}
 	if l != "" {
-		drawComment(l, ft, L_COMMENT_POINT_X, L_COMMENT_POINT_Y, dst)
+		drawComment(l, ft, LCommentPointX, LCommentPointY, dst)
 	}
 	if l2 != "" {
-		drawComment(l2, ft, L_COMMENT_POINT_X, L_COMMENT2_POINT_Y, dst)
+		drawComment(l2, ft, LCommentPointX, LComment2PointY, dst)
 	}
 
 	png.Encode(os.Stdout, dst)
 }
 
 func drawComment(text string, ft *truetype.Font, x int, y int, dst *image.RGBA) {
-	opt := truetype.Options{Size: FONT_SIZE}
+	opt := truetype.Options{Size: FontSize}
 	face := truetype.NewFace(ft, &opt)
-	dot := fixed.Point26_6{X: fixed.Int26_6(x*64), Y: fixed.Int26_6(y * 64)}
+	dot := fixed.Point26_6{X: fixed.Int26_6(x * 64), Y: fixed.Int26_6(y * 64)}
 	d := &font.Drawer{
-		Dst: dst,
-		Src: image.NewUniform(color.Black),
+		Dst:  dst,
+		Src:  image.NewUniform(color.Black),
 		Face: face,
-		Dot: dot,
+		Dot:  dot,
 	}
 	d.DrawString(text)
 }
