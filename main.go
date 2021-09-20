@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"golang.org/x/image/font"
 	"golang.org/x/image/math/fixed"
 	"image"
@@ -30,9 +31,19 @@ const (
 	L_COMMENT2_POINT_Y = L_COMMENT_POINT_Y + FONT_SIZE + 5
 )
 
-func main () {
-	f := "img/test.png"
+var l,r,f string
 
+func init() {
+	flag.StringVar(&l, "l", "", "左のセリフ")
+	flag.StringVar(&r, "r", "", "右のセリフ")
+	flag.StringVar(&f, "f", "", "解説対象の画像パス")
+	flag.Parse()
+	if f == "" {
+		log.Fatal("解説対象の画像パスは必ず指定してください")
+	}
+}
+
+func main () {
 	file, err := os.Open("assets/lr.png")
 	if err != nil {
 		log.Fatal(err)
@@ -95,10 +106,8 @@ func main () {
 		log.Fatal(err)
 	}
 
-	drawComment("ほげほげほげほげ", ft, R_COMMENT_POINT_X, R_COMMENT_POINT_Y, dst)
-	drawComment("ほげほげほげほげ", ft, R_COMMENT_POINT_X, R_COMMENT2_POINT_Y, dst)
-	drawComment("ほげほげほげほげ", ft, L_COMMENT_POINT_X, L_COMMENT_POINT_Y, dst)
-	drawComment("ほげほげほげほげ", ft, R_COMMENT_POINT_X, L_COMMENT2_POINT_Y, dst)
+	drawComment(r, ft, R_COMMENT_POINT_X, R_COMMENT_POINT_Y, dst)
+	drawComment(l, ft, L_COMMENT_POINT_X, L_COMMENT_POINT_Y, dst)
 
 	png.Encode(os.Stdout, dst)
 }
