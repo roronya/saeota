@@ -20,8 +20,8 @@ $ saeota -f figure.png -l 左の1行目のセリフ -l2 左の2行目のセリ�
 ImageMagickでリサイズしてクロップすると簡単です。
 
 ```shell
-$ convert -resize 800x600 input.png resized.png
-$ convert -crop 800x450+0+75 resized.png croped.png
+$ mogrify -resize 800x600 *.png # 結果は上書きされる
+$ mogrify -crop 800x450+0+75 *.png
 ```
 
 ## Output
