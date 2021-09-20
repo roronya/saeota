@@ -7,3 +7,5 @@ https://support.google.com/youtube/answer/72431?hl=ja#zippy=,画像サイズと�
 #
 スクショはiPadで取るのが楽だし正確になる
 ただし4:3なので画面の上下に黒部分が追加されるのでいい感じに切ってあげる
+
+assetsにFONTとテンプレートを入れておく

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	_ "embed"
 	"flag"
 	"golang.org/x/image/font"
 	"golang.org/x/image/math/fixed"
@@ -8,7 +10,6 @@ import (
 	"image/color"
 	"image/draw"
 	"image/png"
-	"io"
 	"log"
 	"os"
 
@@ -30,7 +31,6 @@ const (
 
 // セリフを描画するフォントや位置
 const (
-	FONT = "assets/ipaexg.ttf"
 	FONT_SIZE = 26
 	// 何度か試して適当に決めた
 	R_COMMENT_POINT_X = 250
@@ -42,16 +42,33 @@ const (
 )
 
 /* 変数は全てinitで初期化してmainを見通し良くする */
-var l,r string // セリフ
+var l,l2,r,r2 string // セリフ
 var f string // 解説対象の画像のファイルパス
 var figure image.Image // 解説対象の画像
+
+// テンプレート画像の読み込み用
+//go:embed assets/lr.png
+var template_lr []byte
+//go:embed assets/l.png
+var template_l []byte
+//go:embed assets/r.png
+var template_r []byte
+//go:embed assets/nocomment.png
+var template_nocomment []byte
+
 var template image.Image // テンプレートの画像
+
+//go:embed assets/ipaexg.ttf
+var ftBin []byte // フォントの読み込み用
+
 var ft *truetype.Font // セリフを描画するときに使うフォント
 
 func init() {
 	// コマンドライン引数
 	flag.StringVar(&l, "l", "", "左のセリフ")
+	flag.StringVar(&l2, "l2", "", "二行目の左のセリフ")
 	flag.StringVar(&r, "r", "", "右のセリフ")
+	flag.StringVar(&r2, "r2", "", "二行目の右のセリフ")
 	flag.StringVar(&f, "f", "", "解説対象の画像パス")
 	flag.Parse()
 	if f == "" {
@@ -70,33 +87,22 @@ func init() {
 	}
 
 	// セリフのありなしを見てどのテンプレートを使うか決めてオープンする
-	t := "assets/lr.png"
-	if l == "" {
-		t = "assets/r.png"
+	t := template_nocomment
+	if l != "" && r != "" {
+		t = template_lr
 	}
-	if r == "" {
-		t = "assets/l.png"
+	if l == "" && r != ""{
+		t = template_r
 	}
-	file, err = os.Open(t)
-	if err != nil {
-		log.Fatal(err)
+	if l != "" && r == "" {
+		t = template_l
 	}
-	defer file.Close()
-	template, err = png.Decode(file)
+	template, err = png.Decode(bytes.NewReader(t))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// フォントを開いて用意する
-	file, err = os.Open(FONT)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	ftBin, err := io.ReadAll(file)
-	if err != nil {
-		log.Fatal(err)
-	}
 	ft, err = truetype.Parse(ftBin)
 	if err != nil {
 		log.Fatal(err)
@@ -133,8 +139,18 @@ func main () {
 		draw.Src,
 	)
 
-	drawComment(r, ft, R_COMMENT_POINT_X, R_COMMENT_POINT_Y, dst)
-	drawComment(l, ft, L_COMMENT_POINT_X, L_COMMENT_POINT_Y, dst)
+	if r != "" {
+		drawComment(r, ft, R_COMMENT_POINT_X, R_COMMENT_POINT_Y, dst)
+	}
+	if r2 != "" {
+		drawComment(r2, ft, R_COMMENT_POINT_X, R_COMMENT2_POINT_Y, dst)
+	}
+	if l != "" {
+		drawComment(l, ft, L_COMMENT_POINT_X, L_COMMENT_POINT_Y, dst)
+	}
+	if l2 != "" {
+		drawComment(l2, ft, L_COMMENT_POINT_X, L_COMMENT2_POINT_Y, dst)
+	}
 
 	png.Encode(os.Stdout, dst)
 }
