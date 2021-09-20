@@ -12,6 +12,7 @@ import (
 	"image/png"
 	"log"
 	"os"
+	"unicode/utf8"
 
 	"github.com/golang/freetype/truetype"
 )
@@ -32,13 +33,14 @@ const (
 
 // セリフを描画するフォントや位置 何度か試して適当に決めた
 const (
-	FontSize        = 26
-	RCommentPointX  = 250
-	RCommentPointY  = 530
-	RComment2PointY = RCommentPointY + FontSize + 5 // 5は行間のサイズ
-	LCommentPointX  = 250
-	LCommentPointY  = 645
-	LComment2PointY = LCommentPointY + FontSize + 5
+	MAX_COMMENT_LENGTH = 30
+	FontSize           = 26
+	RCommentPointX     = 250
+	RCommentPointY     = 530
+	RComment2PointY    = RCommentPointY + FontSize + 5 // 5は行間のサイズ
+	LCommentPointX     = 250
+	LCommentPointY     = 645
+	LComment2PointY    = LCommentPointY + FontSize + 5
 )
 
 //コピーライトのフォントや位置 何度か試して適当に決めた
@@ -83,6 +85,15 @@ func init() {
 	flag.StringVar(&f, "f", "", "解説対象の画像パス")
 	flag.StringVar(&c, "c", "", "解説対象のコピーライト")
 	flag.Parse()
+
+	/** コマンドライン引数のチェック */
+	lc := utf8.RuneCountInString(l)
+	l2c := utf8.RuneCountInString(l2)
+	rc := utf8.RuneCountInString(r)
+	r2c := utf8.RuneCountInString(r2)
+	if lc > MAX_COMMENT_LENGTH || l2c > MAX_COMMENT_LENGTH || rc > MAX_COMMENT_LENGTH || r2c > MAX_COMMENT_LENGTH {
+		log.Fatalf("セリフは%d文字以内にしてください。l=%d文字 l2=%d文字 r=%d文字 r2%d文字でした。", MAX_COMMENT_LENGTH, lc, l2c, rc, r2c)
+	}
 	if f == "" {
 		log.Fatal("解説対象の画像パスは必ず指定してください")
 	}
