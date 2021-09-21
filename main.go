@@ -71,7 +71,7 @@ var templateNocomment []byte
 
 var template image.Image // テンプレートの画像
 
-//go:embed assets/ipaexg00401/ipaexg.ttf
+//go:embed assets/Oshidashi-M-Gothic_0_600/TrueType/Oshidashi-M-Gothic-TT.ttf
 var ftBin []byte // フォントの読み込み用
 
 var ft *truetype.Font // セリフを描画するときに使うフォント
