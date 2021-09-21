@@ -36,6 +36,15 @@ see:ref
 
 [動画のサムネイルを追加する - YouTube ヘルプ](https://support.google.com/youtube/answer/72431?hl=ja#zippy=,%E7%94%BB%E5%83%8F%E3%82%B5%E3%82%A4%E3%82%BA%E3%81%A8%E8%A7%A3%E5%83%8F%E5%BA%A6)
 
+## utils
+
+```shell
+$ cat ../example/vrewout.txt | xargs -I{} ./v2s {} >! ../example/v2sout.txt
+$ # 手作業でv2sout.txtを編集しsaeotaコマンドの足りない引数を入れる。s2iin.txtとして保存する
+$ cat ../example/s2iin.txt | xargs -I{} ./s2i {} >! s2iout.txt
+$ ./i2f s2iout.txt frames # 第2引数に出力先ディレクトリを指定する
+```
+
 ## Author
 
 @roronya

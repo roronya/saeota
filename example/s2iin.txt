@@ -1,0 +1,24 @@
+00:00:00 saeota -r 一番好きなシーン教えて -f sample.png > images/s2iout0.png
+00:00:03 saeota -l まぁ今の一話目でこの女の子だったのかぁってところですよね -f sample.png > images/s2iout1.png
+00:00:07 saeota -r あーね、、 -f sample.png > images/s2iout2.png
+00:00:08 saeota -l 冴えない彼女と言ってるのは多分あの子のことなんだろうなと -f sample.png > images/s2iout3.png
+00:00:13 saeota -l とは思いましたね -f sample.png > images/s2iout4.png
+00:00:14 saeota -l ... -r ... -f sample.png > images/s2iout5.png
+00:00:16 saeota -l ww -r ww...そりゃそうだろww -f sample.png > images/s2iout6.png
+00:00:21 saeota -r 嘘でしょ...wwその -f sample.png > images/s2iout7.png
+00:00:24 saeota -l いやでもこのレベルですよ？ -f sample.png > images/s2iout8.png
+00:00:26 saeota -r まじか... -f sample.png > images/s2iout9.png
+00:00:28 saeota -r そうだな、俺喋りたいシーンが3つ -f sample.png > images/s2iout10.png
+00:00:31 saeota -l はいはいはい -r そうだな、俺喋りたいシーンが3つ -f sample.png > images/s2iout11.png
+00:00:32 saeota -r 詩羽先輩の屋上のシーンがやっぱり良いんだよね -f sample.png > images/s2iout12.png
+00:00:38 saeota -l あー -r 詩羽先輩の屋上のシーンがやっぱり良いんだよね -f sample.png > images/s2iout13.png
+00:00:39 saeota -r あれ持ってって破かれて -f sample.png > images/s2iout14.png
+00:00:42 saeota -r クソゴミって言われて -f sample.png > images/s2iout15.png
+00:00:44 saeota -r あの後、いやそれでも俺やりたいんだみたいなの -f sample.png > images/s2iout16.png
+00:00:48 saeota -r 詩羽先輩が立ち去ろうとするじゃん -f sample.png > images/s2iout17.png
+00:00:48 saeota -l はいはいはい -r 詩羽先輩が立ち去ろうとするじゃん -f sample.png > images/s2iout18.png
+00:00:49 saeota -r 詩羽先輩が立ち去ろうとするじゃん -f sample.png > images/s2iout19.png
+00:00:50 saeota -r 彼女日陰に座ってたでしょ？ -f sample.png > images/s2iout20.png
+00:00:53 saeota -r で、日向に立ち去ろうとして -f sample.png > images/s2iout21.png
+00:00:55 saeota -l うん -r で、日向に立ち去ろうとして -f sample.png > images/s2iout22.png
+00:00:56 saeota -r 倫也は日陰に残って -f sample.png > images/s2iout23.png
