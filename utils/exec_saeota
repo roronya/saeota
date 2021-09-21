@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+import subprocess
+
+
+def main():
+    input_file = open('sample.txt', 'r', encoding='UTF-8')
+    output_file = open('output.txt', 'w', encoding='UTF-8')
+    lines = input_file.readlines()
+    output_lines = []
+    for line in lines:
+        split_line = line.split('\t')
+        timecode = split_line[0]
+        command = split_line[1]
+        output_image_path = command.split()[-1]
+        subprocess.call(command, shell=True)
+
+        output_lines.append(timecode + ' ' + output_image_path + '\n')
+
+    output_file.writelines(output_lines)
+    input_file.close()
+    output_file.close()
+
+
+if __name__ == '__main__':
+    main()
