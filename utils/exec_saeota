@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-
 import subprocess
 
 
 def main():
-    input_file = open('sample.txt', 'r', encoding='UTF-8')
-    output_file = open('output.txt', 'w', encoding='UTF-8')
+    input_file = open('sample.txt', 'r')
+    output_file = open('output.txt', 'w')
     lines = input_file.readlines()
     output_lines = []
     for line in lines:
