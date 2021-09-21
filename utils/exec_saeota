@@ -3,14 +3,12 @@ import subprocess
 
 
 def main():
-    input_file = open('sample.txt', 'r')
+    input_file = open('v2s.txt', 'r')
     output_file = open('output.txt', 'w')
     lines = input_file.readlines()
     output_lines = []
     for line in lines:
-        split_line = line.split('\t')
-        timecode = split_line[0]
-        command = split_line[1]
+        timecode, command = line.split('\t')
         output_image_path = command.split()[-1]
         subprocess.call(command, shell=True)
 
