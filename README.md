@@ -36,16 +36,26 @@ see:ref
 
 [動画のサムネイルを追加する - YouTube ヘルプ](https://support.google.com/youtube/answer/72431?hl=ja#zippy=,%E7%94%BB%E5%83%8F%E3%82%B5%E3%82%A4%E3%82%BA%E3%81%A8%E8%A7%A3%E5%83%8F%E5%BA%A6)
 
-## utils
+## Work
 
-utilsはパスの通ったところに置いてください。以下の手順で動画を作成できます。
+workディレクトリで動画を作れます。
 
-```shell
-$ cat ../example/vrewout.txt | xargs -I{} ./v2s {} >! ../example/v2sout.txt
-$ # 手作業でv2sout.txtを編集しsaeotaコマンドの足りない引数を入れる。s2iin.txtとして保存する
-$ cat ../example/s2iin.txt | xargs -I{} ./s2i {} >! s2iout.txt
-$ ./i2f s2iout.txt frames # 第2引数に出力先ディレクトリを指定する
-```
+vrewで作ったscenario.txtと解説画像を置いたらmakeを叩くと動画が一発で作れます。
+
+### scenario.txtの仕様
+
+以下の命令をスペース区切りで入力します。一行が一画像に変換されます。
+
+一行目にはfとcを必ず入力してください。
+
+- r:右のセリフ
+- r2:右のセリフの二行目
+- l:左のセリフ
+- l2:左のセリフの二行目
+- f:解説画像のパス
+    - 指定が無い場合はfが見つかるまで遡り見つかったfの指定を採用します
+- c:解説画像のコピーライト
+    - 指定が無い場合はcが見つかるまで遡り見つかったcの指定を採用します
 
 ## Author
 
