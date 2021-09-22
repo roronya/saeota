@@ -38,6 +38,8 @@ see:ref
 
 ## utils
 
+utilsはパスの通ったところに置いてください。以下の手順で動画を作成できます。
+
 ```shell
 $ cat ../example/vrewout.txt | xargs -I{} ./v2s {} >! ../example/v2sout.txt
 $ # 手作業でv2sout.txtを編集しsaeotaコマンドの足りない引数を入れる。s2iin.txtとして保存する
