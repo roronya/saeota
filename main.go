@@ -71,7 +71,7 @@ var templateNocomment []byte
 
 var template image.Image // テンプレートの画像
 
-//go:embed assets/Oshidashi-M-Gothic_0_600/TrueType/Oshidashi-M-Gothic-TT.ttf
+//go:embed assets/Kosugi/Kosugi-Regular.ttf
 var ftBin []byte // フォントの埋め込み用
 //go:embed assets/ipaexg00401/ipaexg.ttf
 var crFtBin []byte // コピーライト用のフォントの埋め込み用
