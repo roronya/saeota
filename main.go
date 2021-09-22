@@ -56,7 +56,7 @@ var f string            // 解説対象の画像のファイルパス
 var c string            // 解説対象のコピーライト
 var figure image.Image  // 解説対象の画像
 
-// テンプレート画像の読み込み用
+// テンプレート画像の埋め込み
 //go:embed assets/lr.png
 var templateLr []byte
 
@@ -72,9 +72,12 @@ var templateNocomment []byte
 var template image.Image // テンプレートの画像
 
 //go:embed assets/Oshidashi-M-Gothic_0_600/TrueType/Oshidashi-M-Gothic-TT.ttf
-var ftBin []byte // フォントの読み込み用
+var ftBin []byte // フォントの埋め込み用
+//go:embed assets/ipaexg00401/ipaexg.ttf
+var crFtBin []byte // コピーライト用のフォントの埋め込み用
 
-var ft *truetype.Font // セリフを描画するときに使うフォント
+var ft *truetype.Font   // セリフを描画するときに使うフォント
+var crFt *truetype.Font // コピーライトを描画するときに使うフォント
 
 func init() {
 	// コマンドライン引数
@@ -130,6 +133,10 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	crFt, err = truetype.Parse(crFtBin)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 /**
@@ -167,7 +174,7 @@ func main() {
 
 	// コピーライトを書き込む
 	if c != "" {
-		drawCopyright(c, ft, dst)
+		drawCopyright(c, crFt, dst)
 	}
 
 	// セリフを書き込む
