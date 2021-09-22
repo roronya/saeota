@@ -1,17 +1,38 @@
 #!/usr/bin/env python3
 import sys
 
-t = ""
-l = ""
-r = ""
-for s in sys.argv[1].split():
-  t = s if s[:2] != "l:" and s[:2] != "r:" else t
-  l = s[2:] if s[:2] == "l:" else l
-  r = s[2:] if s[:2] == "r:" else r
+with open(sys.argv[1], encoding='utf-8') as scenario:
+    figure = copyright_ = ""
+    timestamp = '00:00:00'
+    for line in scenario.readlines():
+        # 行をスペースで区切り、tokenを舐めながら出力を作っていく
+        # line.split() = ["00:00:00", "l:comment", "r:comment", ...]
+        left = left2 = right = right2 = ""
+        for i, string in enumerate(line.split()):
+            # 一番左はtimestampが入っている
+            if i == 0:
+                timestamp = string
 
-if l != "" and r != "":
-  print(f"{t} saeota -l {l} -r {r}")
-elif l != "" and r == "":
-  print(f"{t} saeota -l {l}")
-elif l == "" and r != "":
-  print(f"{t} saeota -r {r}")
+            mark = string[:2]
+            content = string[2:]
+            # f:とc:は指定が無い行は過去に指定されたものを継続する。一行目は必ずfが指定されるという入力の仕様がある。
+            figure = content if mark == 'f:' else figure
+            copyright_ = content if mark == 'c:' else copyright_
+
+            # 指示があれば更新する。指示がなければ空文字のままにする
+            left = content if mark == 'l:' else left
+            left2 = content if mark == 'l2:' else left2
+            right = content if mark == 'r:' else right
+            right2 = content if mark == 'r2:' else right2
+
+        # アウトプットを作る
+        result = f'{timestamp} ../bin/saeota -f {figure} -c {copyright_} '
+        if left != '':
+            result += f'-l {left}'
+        if left2 != '':
+            result += f'-l2 {left2}'
+        if right != '':
+            result += f'-r {right}'
+        if right2 != '':
+            result += f'-r2 {right2}'
+        print(result)

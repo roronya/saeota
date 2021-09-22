@@ -1,12 +1,18 @@
 all: frames
-	ffmpeg -r 1 -i frames/out%d.png -vcodec libx264 -pix_fmt yuv420p out.mp4
+	ffmpeg -r 1 -i frames/out_%d.png -vcodec libx264 -pix_fmt yuv420p out.mp4
 
-frames: timesheet
-	../bin/images2frames timesheet frames
+frames: conte images
+	../bin/images2frames conte frames images
 
-timesheet: conte
-	mkdir images
-	cat conte | xargs -I{} ../bin/conte2timesheet {} > timesheet
+images: conte
+	cat conte | xargs -P6 -L1 -I{} ../bin/conte2image images {}
 
 conte:
-	cat scenario.txt | xargs -I{} ../bin/scenario2conte {} > conte
+	../bin/scenario2conte scenario.txt > conte
+
+clean:
+	rm -rf images frames conte out.mp4
+
+backup:
+	mkdir backup
+	mv -f images frames conte out.mp4 backup

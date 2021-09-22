@@ -6,35 +6,50 @@ import sys
 
 
 # 00:00:00
-def to_s(t):
-  return int(t[:2]) * 3600 + int(t[3:5]) * 60 + int(t[6:])
+def to_s(string):
+    return int(string[:2]) * 3600 + int(string[3:5]) * 60 + int(string[6:])
+
+
+def get_timestamp_str(string):
+    return string[:8].replace(":", "-")
+
+
+def get_timestamp_int(string):
+    return to_s(get_timestamp_str(string))
 
 
 if len(sys.argv) < 3:
-  logging.error("arv1: s2iout, argv2: 出力先フォルダ")
-  exit(1)
+    logging.error("argv1: conte, argv2: 出力先ディレクトリ, argv3: 入力元ディレクトリ")
+    exit(1)
 
-os.makedirs(sys.argv[2], exist_ok=True)
+dst = sys.argv[2]
+src = sys.argv[3]
 
-s2iout = open(sys.argv[1], 'r')
-lines = s2iout.readlines()
+os.makedirs(dst, exist_ok=True)
 
-x = lines[0].split()
-i = to_s(x[0])  # 最初は00:00:00なので0に初期化されるはず
-olf_f = x[1]
+with open(sys.argv[1], 'r') as conte:
+    lines = conte.readlines()
 
-for line in lines:
-  tc, f = line.split()
-  t = to_s(tc)
-  if i < t:
-    for j in range(t - i):
-      new_file_name = os.path.join(sys.argv[2], f"out{i}.png")
-      shutil.copy(old_f, new_file_name)
-      i = i + 1
-  old_f = f
+    out_count = 0
+    # 今の行と、次の行を見ながら必要なだけフレームを書き出す
+    for i, line in enumerate(lines):
+        if i + 1 >= len(lines):
+            # 最後の行になったら終わり
+            break
 
-# 上のループだと最後の画像が書き出されないので↓で書き出す
-new_file_name = os.path.join(sys.argv[2], f"out{i}.png")
-shutil.copy(f, new_file_name)
+        t = get_timestamp_int(line)
+        next_t = get_timestamp_int(lines[i + 1])
+        for j in range(next_t - t):
+            ts = get_timestamp_str(line)
+            old_file = os.path.join(src, f'out_{ts}.png')
+            new_file = os.path.join(dst, f'out_{out_count}.png')
+            shutil.copy(old_file, new_file)
+            out_count += 1
 
-s2iout.close()
+    # ここにくるとき変数lineには最終行が入っている
+    ts = get_timestamp_str(line)
+    for i in range(3):
+        old_file = os.path.join(src, f'out_{ts}.png')
+        new_file = os.path.join(dst, f'out_{out_count}.png')
+        shutil.copy(old_file, new_file)
+        out_count += 1

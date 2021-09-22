@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+import os.path
+import subprocess
+import sys
+
+os.makedirs('images', exist_ok=True)
+
+dst = sys.argv[1]  # コマンドライン引数はsaeotaコマンドの結果を書き出すディレクトリを指定する
+conte = sys.argv[2]  # conteの行を一文字列として指定する
+
+timestamp = conte[:8]  # 00:00:00
+command = conte[9:]  # 9文字目からはsaeotaコマンド
+
+# 00:00:00を書き込もうとするとMacが00/00/00に変換するので予め対応する
+timestamp = timestamp.replace(":", "-")
+
+out = os.path.join(dst, f'out_{timestamp}.png')
+command += f' > {out}'
+
+subprocess.call(command, shell=True)
+print(f'complete: {out}')
