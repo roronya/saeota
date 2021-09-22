@@ -8,6 +8,7 @@ images: conte
 	cat conte | xargs -P6 -L1 -I{} ../bin/conte2image images {}
 
 conte:
+	nkf --overwrite --oc=UTF-8 scenario.txt
 	../bin/scenario2conte scenario.txt > conte
 
 clean:
