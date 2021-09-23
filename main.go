@@ -4,8 +4,6 @@ import (
 	"bytes"
 	_ "embed"
 	"flag"
-	"golang.org/x/image/font"
-	"golang.org/x/image/math/fixed"
 	"image"
 	"image/color"
 	"image/draw"
@@ -13,6 +11,9 @@ import (
 	"log"
 	"os"
 	"unicode/utf8"
+
+	"golang.org/x/image/font"
+	"golang.org/x/image/math/fixed"
 
 	"github.com/golang/freetype/truetype"
 )
@@ -95,7 +96,7 @@ func init() {
 	rc := utf8.RuneCountInString(r)
 	r2c := utf8.RuneCountInString(r2)
 	if lc > MaxCommentLength || l2c > MaxCommentLength || rc > MaxCommentLength || r2c > MaxCommentLength {
-		log.Fatalf("セリフは%d文字以内にしてください。l=%d文字 l2=%d文字 r=%d文字 r2%d文字でした。", MaxCommentLength, lc, l2c, rc, r2c)
+		log.Fatalf("セリフは%d文字以内にしてください。l=%d文字 l2=%d文字 r=%d文字 r2%d文字でした。「%s」「%s」「%s」「%s」", MaxCommentLength, lc, l2c, rc, r2c, l, l2, r, r2)
 	}
 	if f == "" {
 		log.Fatal("解説対象の画像パスは必ず指定してください")

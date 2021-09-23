@@ -8,31 +8,34 @@ with open(sys.argv[1], encoding='utf-8') as scenario:
         # 行をスペースで区切り、tokenを舐めながら出力を作っていく
         # line.split() = ["00:00:00", "l:comment", "r:comment", ...]
         left = left2 = right = right2 = ""
+        # markを3文字に統一する
+        line = line.replace('l:', 'l1:').replace(
+            'r:', 'r1:').replace('f:', 'fg:').replace('c:', 'cr:')
         for i, string in enumerate(line.split()):
             # 一番左はtimestampが入っている
             if i == 0:
                 timestamp = string
 
-            mark = string[:2]
-            content = string[2:]
+            mark = string[:3]
+            content = string[3:]
             # f:とc:は指定が無い行は過去に指定されたものを継続する。一行目は必ずfが指定されるという入力の仕様がある。
-            figure = content if mark == 'f:' else figure
-            copyright_ = content if mark == 'c:' else copyright_
+            figure = content if mark == 'fg:' else figure
+            copyright_ = content if mark == 'cr:' else copyright_
 
             # 指示があれば更新する。指示がなければ空文字のままにする
-            left = content if mark == 'l:' else left
+            left = content if mark == 'l1:' else left
             left2 = content if mark == 'l2:' else left2
-            right = content if mark == 'r:' else right
+            right = content if mark == 'r1:' else right
             right2 = content if mark == 'r2:' else right2
 
         # アウトプットを作る
-        result = f'{timestamp} ../bin/saeota -f {figure} -c {copyright_} '
+        result = f'{timestamp} ../bin/saeota -f {figure} -c {copyright_}'
         if left != '':
-            result += f'-l {left}'
+            result += f' -l {left}'
         if left2 != '':
-            result += f'-l2 {left2}'
+            result += f' -l2 {left2}'
         if right != '':
-            result += f'-r {right}'
+            result += f' -r {right}'
         if right2 != '':
-            result += f'-r2 {right2}'
+            result += f' -r2 {right2}'
         print(result)
