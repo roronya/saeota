@@ -1,5 +1,5 @@
 all: frames
-	ffmpeg -r 1 -i frames/out_%d.png -vcodec libx264 -pix_fmt yuv420p out.mp4
+	ffmpeg -r 1 -i audio.wav -i frames/out_%d.png -vcodec libx264 -pix_fmt yuv420p out.mp4
 
 frames: conte images
 	../bin/images2frames conte frames images
