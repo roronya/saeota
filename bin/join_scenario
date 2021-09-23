@@ -32,5 +32,5 @@ with open(sys.argv[2], 'r') as second_scenario:
         time_delta = timecode2timedelta(line.split()[0])
         update_time = datetime.datetime.combine(
             base_date, last_time) + time_delta
-        output = update_time.strftime("%H:%M:%S") + '\t' + line.split()[1]
+        output = update_time.strftime("%H:%M:%S") + '\t' + ' '.join(line.split()[1:])
         print(output)

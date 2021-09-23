@@ -5,7 +5,7 @@ frames: conte images
 	../bin/images2frames conte frames images
 
 images: conte
-	cat conte | xargs -P6 -L1 -I{} ../bin/conte2image images {}
+	cat conte | gxargs -P6 -L1 -I{} ../bin/conte2image images {}
 
 conte:
 	nkf --overwrite --oc=UTF-8 scenario.txt
