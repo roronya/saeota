@@ -19,3 +19,11 @@ backup:
 	mkdir backup
 	mv -f images frames conte out.mp4 backup
 	cp scenario.txt backup/
+
+rebuild:
+	make clean && make
+
+f: screenshot
+	mogrify -resize 800x600 screenshot/IMG_*.PNG && mogrify -crop 800x450+0+75 screenshot/IMG_*.PNG
+	mkdir -p f
+	mv screenshot/* f/
